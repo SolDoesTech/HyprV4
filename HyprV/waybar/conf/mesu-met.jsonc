@@ -1,0 +1,16 @@
+{
+    "clock": {
+        "format": "{:%H:%M}",
+        "tooltip-format": "{: %A, %e %B %Y}"
+    },
+
+    "temperature": {
+        "thermal-zone": 1,
+        "format": "",
+        "format-alt-click": "click-right",
+        "format-alt": " {temperatureC}°C",
+        "critical-threshold": 70,
+        "format-critical": " {temperatureC}°C",
+        "on-click": "kitty --start-as=fullscreen --title btop sh -c 'btop'"
+    }
+}

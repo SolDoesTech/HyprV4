@@ -1,0 +1,72 @@
+#!/bin/sh
+. ~/.config/HyprV/hyprv.conf
+
+#Check the version 
+VER=$(readlink -f ~/.config/waybar/config.jsonc | cut -d '-' -f1 | cut -d '/' -f8)
+
+# Check which waybar theme is set
+THEMEIS=$(readlink -f ~/.config/waybar/style.css | cut -d '-' -f3)
+
+#if the theme is not dark then we need to switch to it
+if [[ $THEMEIS == "" ]]; then
+    SWITCHTO="-dark"
+    MODESTR="Dark"
+else
+    MODESTR="Light"
+fi
+
+#show a message
+notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to $MODESTR"
+
+#set the waybar theme
+ln -sf ~/.config/HyprV/waybar/style/$VER'-style'$SWITCHTO.css ~/.config/waybar/style.css
+
+#set the wofi theme
+ln -sf ~/.config/HyprV/wofi/style/$VER'-style'$SWITCHTO.css ~/.config/wofi/style.css
+
+#set the mako theme
+ln -sf ~/.config/HyprV/mako/conf/config$SWITCHTO ~/.config/mako/config
+
+#set the measuring unit
+if [[ $SET_MESU == "I" ]]; then
+    ln -sf ~/.config/HyprV/waybar/conf/mesu-imp.jsonc ~/.config/HyprV/waybar/conf/mesu.jsonc
+elif [[ $SET_MESU == "M" ]]; then
+    ln -sf ~/.config/HyprV/waybar/conf/mesu-met.jsonc ~/.config/HyprV/waybar/conf/mesu.jsonc
+fi
+
+#set the xfce and GTK theme
+if [ $VER == "v4" ]; then
+    xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Dark"
+    gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
+else 
+    xfconf-query -c xsettings -p /Net/IconThemeName -s "Adwaita$SWITCHTO"
+    gsettings set org.gnome.desktop.interface icon-theme "Adwaita$SWITCHTO"
+fi
+
+xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita$SWITCHTO"
+gsettings set org.gnome.desktop.interface gtk-theme "Adwaita$SWITCHTO"
+
+
+#change the background image and be cool about it ;)
+if [ -z $SET_BG ]; then
+    swww img ~/.config/HyprV/backgrounds/$VER'-background'$SWITCHTO.jpg --transition-fps 60 --transition-type wipe --transition-duration 2
+else
+    swww img $SET_BG --transition-fps 60 --transition-type wipe --transition-duration 2
+fi
+
+#update the sddm image
+cp -f ~/.config/HyprV/backgrounds/$VER'-background'$SWITCHTO.jpg /usr/share/sddm/themes/sdt/wallpaper.jpg
+
+#reset mako
+sleep 1
+pkill mako
+mako &
+
+#restart the waybar
+#killall -SIGUSR2 waybar <-- start causing web brwsers to close so switched to below...
+pkill waybar
+waybar &
+
+if [[ $VER == "v4" ]]; then
+    waybar --config ~/.config/HyprV/waybar/conf/v4-config-bottom.jsonc
+fi
