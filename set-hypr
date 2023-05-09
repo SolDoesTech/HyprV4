@@ -67,13 +67,13 @@ INSTLOG="install.log"
 
 # function that would show a progress bar to the user
 show_progress() {
-    echo -n "Please wait."
     while ps | grep $1 &> /dev/null;
     do
         echo -n "."
         sleep 2
     done
-    echo -n "Done!"
+    echo -en "Done!\n"
+    sleep 2
 }
 
 # function that will test for a package and if not found it will attempt to install it
@@ -83,15 +83,15 @@ install_software() {
         echo -e "$COK - $1 is already installed."
     else
         # no package found so installing
-        echo -e "$CNT - Now installing $1 ..."
+        echo -e "$CNT - Now installing $1 ."
         yay -S --noconfirm $1 &>> $INSTLOG &
         show_progress $!
         # test to make sure package installed
         if yay -Q $1 &>> /dev/null ; then
-            echo -e "$COK - $1 was installed."
+            echo -e "\e[1A\e[K$COK - $1 was installed."
         else
             # if this is hit then a package is missing, exit to review log
-            echo -e "$CER - $1 install had failed, please check the install.log"
+            echo -e "\e[1A\e[K$CER - $1 install had failed, please check the install.log"
             exit
         fi
     fi
@@ -152,14 +152,14 @@ fi
 
 #### Check for package manager ####
 if [ ! -f /sbin/yay ]; then  
-    echo -e "$CNT - Configuering tools..."
+    echo -e "$CNT - Configuering tools."
     git clone https://aur.archlinux.org/yay-git.git &>> $INSTLOG
     cd yay-git
     makepkg -si --noconfirm &>> ../$INSTLOG &
     show_progress $!
     
     # update the yay database
-    echo -e "$CNT - Updating tools..."
+    echo -e "$CNT - Updating tools."
     yay -Suy --noconfirm &>> $INSTLOG &
     show_progress $!
 fi
