@@ -185,7 +185,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 
     # Prep Stage - Bunch of needed items
     echo -e "$CNT - Prep Stage - Installing needed components, this may take a while..."
-    for SOFTWR in gtk3 qt5-wayland qt6-wayland qt5ct qt6ct pipewire wireplumber jq gcc12 wl-clipboard cliphist python-requests
+    for SOFTWR in qt5-wayland qt6-wayland qt5ct qt6ct gtk3 polkit-gnome pipewire wireplumber jq gcc12 wl-clipboard cliphist python-requests pacman-contrib
     do
         install_software $SOFTWR 
     done
@@ -195,21 +195,21 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 
     # Stage 1 - main components
     echo -e "$CNT - Stage 1 - Installing main components, this may take a while..."
-    for SOFTWR in hyprland kitty mako waybar-hyprland swww swaylock-effects wofi wlogout xdg-desktop-portal-hyprland swappy grim slurp thunar
+    for SOFTWR in hyprland kitty mako waybar-hyprland swww swaylock-effects wofi wlogout xdg-desktop-portal-hyprland swappy grim slurp thunar btop 
     do
         install_software $SOFTWR 
     done
 
     # Stage 2 - more tools
     echo -e "$CNT - Stage 2 - Installing additional tools and utilities, this may take a while..."
-    for SOFTWR in firefox thunderbird mpv polkit-gnome pamixer pavucontrol brightnessctl bluez bluez-utils blueman network-manager-applet gvfs thunar-archive-plugin file-roller btop pacman-contrib
+    for SOFTWR in firefox thunderbird mpv pamixer pavucontrol brightnessctl bluez bluez-utils blueman network-manager-applet gvfs thunar-archive-plugin file-roller
     do
         install_software $SOFTWR
     done
 
     # Stage 3 - some visual tools
     echo -e "$CNT - Stage 3 - Installing theme and visual related tools and utilities, this may take a while..."
-    for SOFTWR in starship papirus-icon-theme ttf-jetbrains-mono-nerd noto-fonts-emoji lxappearance xfce4-settings sddm-git sddm-sugar-candy-git 
+    for SOFTWR in starship papirus-icon-theme ttf-jetbrains-mono-nerd noto-fonts-emoji lxappearance xfce4-settings sddm-git sddm-sugar-candy-git
     do
         install_software $SOFTWR
     done
