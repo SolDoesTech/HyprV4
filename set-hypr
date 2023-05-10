@@ -157,7 +157,8 @@ if [ ! -f /sbin/yay ]; then
     cd yay-git
     makepkg -si --noconfirm &>> ../$INSTLOG &
     show_progress $!
-    
+    cd ..
+
     # update the yay database
     echo -e "$CNT - Updating tools."
     yay -Suy --noconfirm &>> $INSTLOG &
@@ -241,10 +242,10 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     if locale -a | grep -q ^en_US; then
         echo -e "$CNT - Setting mesuring system to imperial..."
         ln -sf ~/.config/HyprV/waybar/conf/mesu-imp.jsonc ~/.config/HyprV/waybar/conf/mesu.jsonc
-        sed -i 's/SET_MESU=""/SET_MESU="I"/' ~/.conf/HyprV/hyprv.conf
+        sed -i 's/SET_MESU=""/SET_MESU="I"/' ~/.config/HyprV/hyprv.conf
     else
         echo -e "$CNT - Setting mesuring system to metric..."
-        sed -i 's/SET_MESU=""/SET_MESU="M"/' ~/.conf/HyprV/hyprv.conf
+        sed -i 's/SET_MESU=""/SET_MESU="M"/' ~/.config/HyprV/hyprv.conf
         ln -sf ~/.config/HyprV/waybar/conf/mesu-met.jsonc ~/.config/HyprV/waybar/conf/mesu.jsonc
     fi
 
