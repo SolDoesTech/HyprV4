@@ -169,14 +169,14 @@ if [[ $WIFI == "Y" || $WIFI == "y" ]]; then
     echo -e "$CNT - Restarting NetworkManager service..."
     sleep 1
     sudo systemctl restart NetworkManager &>> $INSTLOG
-    sleep 3
+    sleep 4
 fi
 
 #### Check for package manager ####
 if [ ! -f /sbin/yay ]; then  
     echo -en "$CNT - Configuering yay."
     git clone https://aur.archlinux.org/yay.git &>> $INSTLOG
-    cd yay-git
+    cd yay
     makepkg -si --noconfirm &>> ../$INSTLOG &
     show_progress $!
     if [ -f /sbin/yay ]; then
