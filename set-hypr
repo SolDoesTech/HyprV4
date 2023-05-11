@@ -167,9 +167,10 @@ if [[ $WIFI == "Y" || $WIFI == "y" ]]; then
     echo -e "$CNT - The following file has been created $LOC."
     echo -e "[connection]\nwifi.powersave = 2" | sudo tee -a $LOC &>> $INSTLOG
     echo -e "$CNT - Restarting NetworkManager service..."
-    sleep 1
+    sleep 2
     sudo systemctl restart NetworkManager &>> $INSTLOG
-    sleep 4
+    sleep 8
+    show_progress $!
 fi
 
 #### Check for package manager ####
