@@ -5,53 +5,76 @@
 
 # The follwoing will attempt to install all needed packages to run Hyprland
 # This is a quick and dirty script there are some error checking
-# This script is meant to run on a clean fresh Arch install on physical hardware
-#
-# Below is a list of the packages that would be installed
-#
-# Nvidia GPU only
-# linux-headers: Headers and scripts for building modules for the Linux kernel
-# nvidia-dkms: NVIDIA drivers - module sources
-# qt5-wayland: Provides APIs for Wayland
-# qt5ct: Qt5 Configuration Utility
-# libva: Video Acceleration (VA) API for Linux
-# libva-nvidia-driver-git [AUR]: VA-API implementation that uses NVDEC as a backend (git version)
+# IMPORTANT - This script is meant to run on a clean fresh Arch install on physical hardware
 
-# hyprland: a highly customizable dynamic tiling Wayland compositor
-# kitty: A modern, hackable, featureful, OpenGL-based terminal emulator
-# jq: Command-line JSON processor
-# mako: Lightweight notification daemon for Wayland
-# waybar-hyprland [AUR]: Highly customizable Wayland bar for Sway and Wlroots based compositors, with workspaces support for Hyprland
-# swww [AUR]: Efficient animated wallpaper daemon for wayland, controlled at runtime.
-# swaylock-effects [AUR]: A fancier screen locker for Wayland.
-# wofi: launcher for wlroots-based wayland compositors
-# wlogout [AUR]: Logout menu for wayland
-# xdg-desktop-portal-hyprland: xdg-desktop-portal backend for hyprland
-# swappy: A Wayland native snapshot editing tool
-# grim: Screenshot utility for Wayland
-# slurp: Select a region in a Wayland compositor
-# thunar: Modern, fast and easy-to-use file manager for Xfce
-# polkit-gnome: Legacy polkit authentication agent for GNOME
-# python-requests: Python HTTP for Humans
-# pamixer: Pulseaudio command-line mixer like amixer
-# pavucontrol: PulseAudio Volume Control
-# brightnessctl: Lightweight brightness control tool
-# bluez: Daemons for the bluetooth protocol stack
-# bluez-utils: Development and debugging utilities for the bluetooth protocol stack
-# blueman: GTK+ Bluetooth Manager
-# network-manager-applet: Applet for managing network connection
-# gvfs: Virtual filesystem implementation for GIO
-# thunar-archive-plugin: Adds archive operations to the Thunar file context menus
-# file-roller: Create and modify archives
-# btop: A monitor of system resources, bpytop ported to C++
-# pacman-contrib: Contributed scripts and tools for pacman systems
-# starship: The cross-shell prompt for astronauts
-# ttf-jetbrains-mono-nerd: Patched font JetBrains Mono from nerd fonts library
-# noto-fonts-emoji: Google Noto emoji fonts
-# lxappearance: Feature-rich GTK+ theme switcher of the LXDE Desktop
-# xfce4-settings: Xfce's Configuration System
-# sddm-git [AUR]: The Simple Desktop Display Manager
-# sddm-sugar-candy-git [AUR]: Sugar Candy is the sweetest login theme available for the SDDM display manager.
+# Define the software that would be inbstalled 
+prep_stage=(
+    qt5-wayland 
+    qt5ct
+    qt6-wayland 
+    qt6ct 
+    gtk3 
+    polkit-gnome 
+    pipewire 
+    wireplumber 
+    jq 
+    gcc12 
+    wl-clipboard 
+    cliphist 
+    python-requests 
+    pacman-contrib
+)
+
+#software for nvidia GPU only
+nvidia_stage=(
+    linux-headers 
+    nvidia-dkms 
+    nvidia-settings 
+    libva 
+    libva-nvidia-driver-git
+)
+
+install_stage=(
+    hyprland 
+    kitty 
+    mako 
+    waybar-hyprland 
+    swww 
+    swaylock-effects 
+    wofi 
+    wlogout 
+    xdg-desktop-portal-hyprland 
+    swappy 
+    grim 
+    slurp 
+    thunar 
+    btop
+    firefox
+    thunderbird
+    mpv
+    pamixer 
+    pavucontrol 
+    brightnessctl 
+    bluez 
+    bluez-utils 
+    blueman 
+    network-manager-applet 
+    gvfs 
+    thunar-archive-plugin 
+    file-roller
+    starship 
+    papirus-icon-theme 
+    ttf-jetbrains-mono-nerd 
+    noto-fonts-emoji 
+    lxappearance 
+    xfce4-settings 
+    sddm-git 
+    sddm-sugar-candy-git
+)
+
+for str in ${myArray[@]}; do
+  echo $str
+done
 
 # set some colors
 CNT="[\e[1;36mNOTE\e[0m]"
@@ -143,7 +166,6 @@ if [[ $WIFI == "Y" || $WIFI == "y" ]]; then
     LOC="/etc/NetworkManager/conf.d/wifi-powersave.conf"
     echo -e "$CNT - The following file has been created $LOC."
     echo -e "[connection]\nwifi.powersave = 2" | sudo tee -a $LOC &>> $INSTLOG
-    echo -e "\n"
     echo -e "$CNT - Restarting NetworkManager service..."
     sleep 1
     sudo systemctl restart NetworkManager &>> $INSTLOG
@@ -152,17 +174,25 @@ fi
 
 #### Check for package manager ####
 if [ ! -f /sbin/yay ]; then  
-    echo -e "$CNT - Configuering tools."
-    git clone https://aur.archlinux.org/yay-git.git &>> $INSTLOG
+    echo -en "$CNT - Configuering yay."
+    git clone https://aur.archlinux.org/yay.git &>> $INSTLOG
     cd yay-git
     makepkg -si --noconfirm &>> ../$INSTLOG &
     show_progress $!
-    cd ..
-
-    # update the yay database
-    echo -e "$CNT - Updating tools."
-    yay -Suy --noconfirm &>> $INSTLOG &
-    show_progress $!
+    if [ -f /sbin/yay ]; then
+        echo -e "\e[1A\e[K$COK - yay configured"
+        cd ..
+        
+        # update the yay database
+        echo -en "$CNT - Updating yay."
+        yay -Suy --noconfirm &>> $INSTLOG &
+        show_progress $!
+        echo -e "\e[1A\e[K$COK - yay updated."
+    else
+        # if this is hit then a package is missing, exit to review log
+        echo -e "\e[1A\e[K$CER - yay install failed, please check the install.log"
+        exit
+    fi
 fi
 
 
@@ -170,11 +200,17 @@ fi
 ### Install all of the above pacakges ####
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
+
+    # Prep Stage - Bunch of needed items
+    echo -e "$CNT - Prep Stage - Installing needed components, this may take a while..."
+    for SOFTWR in ${prep_stage[@]}; do
+        install_software $SOFTWR 
+    done
+
     # Setup Nvidia if it was found
     if [[ "$ISNVIDIA" == true ]]; then
-        echo -e "$CNT - Nvidia setup stage, this may take a while..."
-        for SOFTWR in linux-headers nvidia-dkms nvidia-settings libva libva-nvidia-driver-git
-        do
+        echo -e "$CNT - Nvidia GPU support setup stage, this may take a while..."
+        for SOFTWR in ${nvidia_stage[@]}; do
             install_software $SOFTWR
         done
     
@@ -183,36 +219,14 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
         sudo mkinitcpio --config /etc/mkinitcpio.conf --generate /boot/initramfs-custom.img
         echo -e "options nvidia-drm modeset=1" | sudo tee -a /etc/modprobe.d/nvidia.conf &>> $INSTLOG
     fi
-
-    # Prep Stage - Bunch of needed items
-    echo -e "$CNT - Prep Stage - Installing needed components, this may take a while..."
-    for SOFTWR in qt5-wayland qt6-wayland qt5ct qt6ct gtk3 polkit-gnome pipewire wireplumber jq gcc12 wl-clipboard cliphist python-requests pacman-contrib
-    do
-        install_software $SOFTWR 
-    done
     
     #fix needed for waybar-hyprland
     export CC=gcc-12 CXX=g++-12
 
     # Stage 1 - main components
-    echo -e "$CNT - Stage 1 - Installing main components, this may take a while..."
-    for SOFTWR in hyprland kitty mako waybar-hyprland swww swaylock-effects wofi wlogout xdg-desktop-portal-hyprland swappy grim slurp thunar btop 
-    do
+    echo -e "$CNT - Installing main components, this may take a while..."
+    for SOFTWR in ${install_stage[@]}; do
         install_software $SOFTWR 
-    done
-
-    # Stage 2 - more tools
-    echo -e "$CNT - Stage 2 - Installing additional tools and utilities, this may take a while..."
-    for SOFTWR in firefox thunderbird mpv pamixer pavucontrol brightnessctl bluez bluez-utils blueman network-manager-applet gvfs thunar-archive-plugin file-roller
-    do
-        install_software $SOFTWR
-    done
-
-    # Stage 3 - some visual tools
-    echo -e "$CNT - Stage 3 - Installing theme and visual related tools and utilities, this may take a while..."
-    for SOFTWR in starship papirus-icon-theme ttf-jetbrains-mono-nerd noto-fonts-emoji lxappearance xfce4-settings sddm-git sddm-sugar-candy-git
-    do
-        install_software $SOFTWR
     done
 
     # Start the bluetooth service
@@ -239,12 +253,13 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     cp -R HyprV ~/.config/
 
     #set the measuring unit
+    echo -e "$CNT - Attempring to set mesuring unit..."
     if locale -a | grep -q ^en_US; then
-        echo -e "$CNT - Setting mesuring system to imperial..."
+        echo -e "$COK - Setting mesuring system to imperial..."
         ln -sf ~/.config/HyprV/waybar/conf/mesu-imp.jsonc ~/.config/HyprV/waybar/conf/mesu.jsonc
         sed -i 's/SET_MESU=""/SET_MESU="I"/' ~/.config/HyprV/hyprv.conf
     else
-        echo -e "$CNT - Setting mesuring system to metric..."
+        echo -e "$COK - Setting mesuring system to metric..."
         sed -i 's/SET_MESU=""/SET_MESU="M"/' ~/.config/HyprV/hyprv.conf
         ln -sf ~/.config/HyprV/waybar/conf/mesu-met.jsonc ~/.config/HyprV/waybar/conf/mesu.jsonc
     fi
@@ -355,8 +370,8 @@ fi
 ### Script is done ###
 echo -e "$CNT - Script had completed!"
 if [[ "$ISNVIDIA" == true ]]; then 
-    echo -e "$CAT - Since we attempted to setup Nvidia the script will now end and you should reboot.
-    type 'reboot' at the prompt and hit Enter when ready."
+    echo -e "$CAT - Since we attempted to setup an Nvidia GPU the script will now end and you should reboot.
+    Please type 'reboot' at the prompt and hit Enter when ready."
     exit
 fi
 
