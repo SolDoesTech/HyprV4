@@ -166,11 +166,17 @@ if [[ $WIFI == "Y" || $WIFI == "y" ]]; then
     LOC="/etc/NetworkManager/conf.d/wifi-powersave.conf"
     echo -e "$CNT - The following file has been created $LOC."
     echo -e "[connection]\nwifi.powersave = 2" | sudo tee -a $LOC &>> $INSTLOG
-    echo -e "$CNT - Restarting NetworkManager service..."
+    echo -en "$CNT - Restarting NetworkManager service, Please wait."
     sleep 2
     sudo systemctl restart NetworkManager &>> $INSTLOG
-    sleep 8
-    show_progress $!
+    
+    #wait for services to restore (looking at you DNS)
+    for i in {1..8} 
+    do
+        echo -n "."
+        sleep 1
+    done
+    echo -e "\e[1A\e[K$COK - NetworkManager restart completed."
 fi
 
 #### Check for package manager ####
