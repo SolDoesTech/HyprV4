@@ -8,6 +8,7 @@
 # IMPORTANT - This script is meant to run on a clean fresh Arch install on physical hardware
 
 # Define the software that would be inbstalled 
+#Need some prep work
 prep_stage=(
     qt5-wayland 
     qt5ct
@@ -34,6 +35,7 @@ nvidia_stage=(
     libva-nvidia-driver-git
 )
 
+#the main packages
 install_stage=(
     hyprland 
     kitty 
@@ -66,8 +68,7 @@ install_stage=(
     papirus-icon-theme 
     ttf-jetbrains-mono-nerd 
     noto-fonts-emoji 
-    lxappearance 
-    xfce4-settings 
+    nwg-look-bin
     sddm-git 
     sddm-sugar-candy-git
 )
@@ -149,7 +150,7 @@ if [[ $CONTINST == "Y" || $CONTINST == "y" ]]; then
     echo -e "$CNT - Setup starting..."
     sudo touch /tmp/hyprv.tmp
 else
-    echo -e "$CNT - This script would now exit, no changes were made to your system."
+    echo -e "$CNT - This script will now exit, no changes were made to your system."
     exit
 fi
 
@@ -342,7 +343,7 @@ if [[ $STAR == "Y" || $STAR == "y" ]]; then
     echo -e "$CNT - Hansen Crusher, Engage!"
     echo -e "$CNT - Updating .bashrc..."
     echo -e '\neval "$(starship init bash)"' >> ~/.bashrc
-    echo -e "$CNT - copying starship config file to ~/.confg ..."
+    echo -e "$CNT - copying starship config file to ~/.config ..."
     cp Extras/starship.toml ~/.config/
 fi
 
