@@ -37,7 +37,6 @@ nvidia_stage=(
 
 #the main packages
 install_stage=(
-    hyprland 
     kitty 
     mako 
     waybar-hyprland 
@@ -229,7 +228,15 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
         sudo mkinitcpio --config /etc/mkinitcpio.conf --generate /boot/initramfs-custom.img
         echo -e "options nvidia-drm modeset=1" | sudo tee -a /etc/modprobe.d/nvidia.conf &>> $INSTLOG
     fi
-    
+
+    # Install the correct hyprland version
+    echo -e "$CNT - Installing Hyprland, this may take a while..."
+    if [[ "$ISNVIDIA" == true ]]; then
+        install_software hyprland-nvidia
+    else
+        install_software hyprland
+    fi
+
     #fix needed for waybar-hyprland
     export CC=gcc-12 CXX=g++-12
 
@@ -301,6 +308,12 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     ln -sf ~/.config/HyprV/wofi/config ~/.config/wofi/config
     ln -sf ~/.config/HyprV/wofi/style/v4-style-dark.css ~/.config/wofi/style.css
 
+
+    # add the Nvidia env file to the config (if needed)
+    if [[ "$ISNVIDIA" == true ]]; then
+        echo -e "\nsource = ~/.config/hypr/env_var_nvidia.conf" >> ~/.config/hypr/hyprland.conf
+    if
+
     # Copy the SDDM theme
     echo -e "$CNT - Setting up the login screen."
     sudo cp -R Extras/sdt /usr/share/sddm/themes/
@@ -317,16 +330,6 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     
     # stage the .desktop file
     sudo cp Extras/hyprland.desktop /usr/share/wayland-sessions/
-    
-    if [[ "$ISNVIDIA" == true ]]; then
-        # setup nvidia startup file
-        cp Extras/start-hypr-nvidia ~/.start-hypr-nvidia
-        sudo sed -i 's/Exec=Hyprland/Exec=\/home\/'$USER'\/.start-hypr-nvidia/' /usr/share/wayland-sessions/hyprland.desktop
-    else
-        # setup non nvidia startup file
-        cp Extras/start-hypr-amd ~/.start-hypr-amd
-        sudo sed -i 's/Exec=Hyprland/Exec=\/home\/'$USER'\/.start-hypr-amd/' /usr/share/wayland-sessions/hyprland.desktop
-    fi
 
     # setup the first look and feel as dark
     xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark"
