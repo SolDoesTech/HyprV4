@@ -67,6 +67,8 @@ install_stage=(
     papirus-icon-theme 
     ttf-jetbrains-mono-nerd 
     noto-fonts-emoji 
+    lxappearance 
+    xfce4-settings
     nwg-look-bin
     sddm-git 
     sddm-sugar-candy-git
@@ -312,7 +314,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     # add the Nvidia env file to the config (if needed)
     if [[ "$ISNVIDIA" == true ]]; then
         echo -e "\nsource = ~/.config/hypr/env_var_nvidia.conf" >> ~/.config/hypr/hyprland.conf
-    if
+    fi
 
     # Copy the SDDM theme
     echo -e "$CNT - Setting up the login screen."
