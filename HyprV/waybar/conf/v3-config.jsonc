@@ -183,15 +183,6 @@
         "spacing": 10
     },
 
-    "custom/weather": {
-        //shows the current weather and forecast
-        "tooltip" : true,
-        "format" : "{}",
-        "interval" : 30,
-        "exec" : "~/.config/HyprV/waybar/scripts/waybar-wttr.py",
-        "return-type" : "json"
-    },
-
     "custom/updates": {
         "format": "{}",
         "exec": "~/.config/HyprV/waybar/scripts/update-sys",

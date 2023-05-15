@@ -54,15 +54,6 @@
         }
     },
 
-   "custom/weather" : {
-        //shows the current weather and forecast
-        "tooltip" : true,
-        "format" : "{}",
-        "interval" : 30,
-        "exec" : "~/.config/HyprV/waybar/scripts/waybar-wttr.py",
-        "return-type" : "json"
-    },
-
     "tray": {
         "icon-size": 18,
         "spacing": 10

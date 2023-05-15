@@ -16,14 +16,9 @@
     "modules-center": ["wlr/taskbar"],
     "modules-right": ["custom/weather"],
 
-    "custom/weather": {
-        //shows the current weather and forecast
-        "tooltip" : true,
-        "format" : "{}",
-        "interval" : 30,
-        "exec" : "~/.config/HyprV/waybar/scripts/waybar-wttr.py",
-        "return-type" : "json"
-    },
+    "include": [
+        "~/.config/HyprV/waybar/conf/mesu.jsonc"
+    ],
 
     "custom/launch_firefox": {
         "format": "",
