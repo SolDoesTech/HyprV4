@@ -13,7 +13,10 @@ prep_stage=(
     qt5-wayland 
     qt5ct
     qt6-wayland 
-    qt6ct 
+    qt6ct
+    qt5-svg
+    qt5-quickcontrols2
+    qt5-graphicaleffects
     gtk3 
     polkit-gnome 
     pipewire 
@@ -71,7 +74,6 @@ install_stage=(
     xfce4-settings
     nwg-look-bin
     sddm-git 
-    sddm-sugar-candy-git
 )
 
 for str in ${myArray[@]}; do
