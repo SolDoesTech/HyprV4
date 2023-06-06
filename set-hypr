@@ -22,7 +22,6 @@ prep_stage=(
     pipewire 
     wireplumber 
     jq 
-    gcc12 
     wl-clipboard 
     cliphist 
     python-requests 
@@ -42,7 +41,7 @@ nvidia_stage=(
 install_stage=(
     kitty 
     mako 
-    waybar-hyprland 
+    waybar
     swww 
     swaylock-effects 
     wofi 
@@ -73,7 +72,7 @@ install_stage=(
     lxappearance 
     xfce4-settings
     nwg-look-bin
-    sddm-git 
+    sddm
 )
 
 for str in ${myArray[@]}; do
@@ -244,9 +243,6 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
     else
         install_software hyprland
     fi
-
-    #fix needed for waybar-hyprland
-    export CC=gcc-12 CXX=g++-12
 
     # Stage 1 - main components
     echo -e "$CNT - Installing main components, this may take a while..."
