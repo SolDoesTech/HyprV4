@@ -186,7 +186,7 @@ fi
 
 #### Check for package manager ####
 if [ ! -f /sbin/yay ]; then  
-    echo -en "$CNT - Configuering yay."
+    echo -en "$CNT - Configuring yay."
     git clone https://aur.archlinux.org/yay.git &>> $INSTLOG
     cd yay
     makepkg -si --noconfirm &>> ../$INSTLOG &
