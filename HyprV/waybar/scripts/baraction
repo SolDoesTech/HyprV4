@@ -36,8 +36,13 @@ fi
 
 #set the xfce and GTK theme
 if [ $VER == "v4" ]; then
-    xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Dark"
-    gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
+    if [[ $THEMEIS == "dark.css" ]]; then
+      xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Light"
+      gsettings set org.gnome.desktop.interface icon-theme "Papirus-Light"
+    else
+      xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Dark"
+      gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
+    fi
 else 
     xfconf-query -c xsettings -p /Net/IconThemeName -s "Adwaita$SWITCHTO"
     gsettings set org.gnome.desktop.interface icon-theme "Adwaita$SWITCHTO"
