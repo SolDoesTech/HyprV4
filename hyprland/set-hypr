@@ -73,6 +73,17 @@ install_stage=(
     xfce4-settings
     nwg-look-bin
     sddm
+    tor
+    tor-browser
+    onionshare
+    gajim
+    tox
+    qtox
+    hexchat
+    hexchat-otr
+    flatpak
+    ranger
+    neovim
 )
 
 for str in ${myArray[@]}; do
@@ -306,11 +317,11 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     ln -sf ~/.config/HyprV/kitty/kitty.conf ~/.config/kitty/kitty.conf
     ln -sf ~/.config/HyprV/mako/conf/config-dark ~/.config/mako/config
     ln -sf ~/.config/HyprV/swaylock/config ~/.config/swaylock/config
-    ln -sf ~/.config/HyprV/waybar/conf/v4-config.jsonc ~/.config/waybar/config.jsonc
-    ln -sf ~/.config/HyprV/waybar/style/v4-style-dark.css ~/.config/waybar/style.css
+    ln -sf ~/.config/HyprV/waybar/conf/v2-config.jsonc ~/.config/waybar/config.jsonc
+    ln -sf ~/.config/HyprV/waybar/style/v2-style-dark.css ~/.config/waybar/style.css
     ln -sf ~/.config/HyprV/wlogout/layout ~/.config/wlogout/layout
     ln -sf ~/.config/HyprV/wofi/config ~/.config/wofi/config
-    ln -sf ~/.config/HyprV/wofi/style/v4-style-dark.css ~/.config/wofi/style.css
+    ln -sf ~/.config/HyprV/wofi/style/v2-style-dark.css ~/.config/wofi/style.css
 
 
     # add the Nvidia env file to the config (if needed)
@@ -354,35 +365,6 @@ if [[ $STAR == "Y" || $STAR == "y" ]]; then
     cp Extras/starship.toml ~/.config/
 fi
 
-### Install software for Asus ROG laptops ###
-read -rep $'[\e[1;33mACTION\e[0m] - For ASUS ROG Laptops - Would you like to install Asus ROG software support? (y,n) ' ROG
-if [[ $ROG == "Y" || $ROG == "y" ]]; then
-    echo -e "$CNT - Adding Keys..."
-    sudo pacman-key --recv-keys 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35 &>> $INSTLOG
-    sudo pacman-key --finger 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35 &>> $INSTLOG
-    sudo pacman-key --lsign-key 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35 &>> $INSTLOG
-    sudo pacman-key --finger 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35 &>> $INSTLOG
-
-    LOC="/etc/pacman.conf"
-    echo -e "$CNT - Updating $LOC with g14 repo."
-    echo -e "\n[g14]\nServer = https://arch.asus-linux.org" | sudo tee -a $LOC &>> $INSTLOG
-    echo -e "$CNT - Update the system..."
-    sudo pacman -Suy --noconfirm &>> $INSTLOG
-
-    echo -e "$CNT - Installing ROG pacakges..."
-    install_software asusctl
-    install_software supergfxctl
-    install_software rog-control-center
-
-    echo -e "$CNT - Activating ROG services..."
-    sudo systemctl enable --now power-profiles-daemon.service &>> $INSTLOG
-    sleep 2
-    sudo systemctl enable --now supergfxd &>> $INSTLOG
-    sleep 2
-
-    # add the ROG keybinding file to the config
-    echo -e "\nsource = ~/.config/hypr/rog-g15-strix-2021-binds.conf" >> ~/.config/hypr/hyprland.conf
-fi
 
 ### Script is done ###
 echo -e "$CNT - Script had completed!"
