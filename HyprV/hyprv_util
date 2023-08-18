@@ -142,4 +142,8 @@ TOOLTIP='Default Keybinds\n'\
 'SUPER + T = Switch HyprV version\n'\
 'ALT + V = Open clipboard manager'
 
+modKey=$(grep "\$mainMod = " ~/.config/hypr/hyprland.conf | cut -d "=" -f2 | tr -d \[:space:\])
+TOOLTIP=$(awk -F "=|,|#" '/bind = / {gsub("= ", "=") gsub("\\$mainMod", "'$modKey'"); if (NF==6) printf $2" +"$3" ="$6"\\n"}' ~/.config/hypr/hyprland.conf | rev | cut -c 3- | rev)
+
 echo '{"text": "'$VER'", "tooltip": "'$TOOLTIP'"}'
+
