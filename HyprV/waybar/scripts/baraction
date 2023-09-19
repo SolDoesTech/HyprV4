@@ -2,7 +2,7 @@
 . ~/.config/HyprV/hyprv.conf
 
 #Check the version 
-VER=$(readlink -f ~/.config/waybar/config.jsonc | rev | cut -d '-' -f 2 | cut -d '/' -f 1 | rev)
+VER=$(readlink -f ~/.config/waybar/config.jsonc | rev | cut -d '-' -f2 | cut -d '/' -f1 | rev)
 
 # Check which waybar theme is set
 THEMEIS=$(readlink -f ~/.config/waybar/style.css | rev | cut -d '-' -f1 | rev)
