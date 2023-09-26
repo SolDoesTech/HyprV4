@@ -390,7 +390,7 @@ if [[ $CONTINST == "Y" || $CONTINST == "y" ]]; then
     echo -e "$CNT - Installing OpenSSH..."
     yay -S openssh &>> $INSTLOG
     echo -e "$CNT - Activating SSH services..."
-    sudo systemctl enable sshd
+    sudo systemctl enable sshd &>> $INSTLOG
     echo -e "$CNT - Your IP is: " ip -br -c a
 fi
 
