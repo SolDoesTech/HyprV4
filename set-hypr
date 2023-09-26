@@ -384,6 +384,16 @@ if [[ $ROG == "Y" || $ROG == "y" ]]; then
     echo -e "\nsource = ~/.config/hypr/rog-g15-strix-2021-binds.conf" >> ~/.config/hypr/hyprland.conf
 fi
 
+### Ask for SSHD / OpenSSH install ###
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install OpenSSH / SSHD (y,n) ' CONTINST
+if [[ $CONTINST == "Y" || $CONTINST == "y" ]]; then
+    echo -e "$CNT - Installing OpenSSH..."
+    yay -S openssh &>> $INSTLOG
+    echo -e "$CNT - Activating SSH services..."
+    sudo systemctl enable sshd
+    echo -e "$CNT - Your IP is: " ip -br -c a
+fi
+
 ### Script is done ###
 echo -e "$CNT - Script had completed!"
 if [[ "$ISNVIDIA" == true ]]; then 
