@@ -87,6 +87,7 @@ CAT="[\e[1;37mATTENTION\e[0m]"
 CWR="[\e[1;35mWARNING\e[0m]"
 CAC="[\e[1;33mACTION\e[0m]"
 INSTLOG="install.log"
+IP="ip"
 
 ######
 # functions go here
@@ -391,7 +392,9 @@ if [[ $CONTINST == "Y" || $CONTINST == "y" ]]; then
     yay -S openssh &>> $INSTLOG
     echo -e "$CNT - Activating SSH services..."
     sudo systemctl enable sshd &>> $INSTLOG
-    echo -e "$CNT - Your IP is: " ip -br -c a
+    echo -e "$CNT - Your IP is: " 
+    echo -e "$CNT - ip -br -c a" &>> $IP
+    
 fi
 
 ### Script is done ###
