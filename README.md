@@ -6,6 +6,7 @@ The original purpose was to make your life more easily.
 
 ### Status:
 Work in progress.
+
 As the script is still in work in Local(The script itself) and Remote(Github) way.
 
 ### Notes:
@@ -18,4 +19,5 @@ Clone the project, go to the root of the project and run this command:
 ```
 .\set-hypr
 ```
+
 And you're ready to go!
