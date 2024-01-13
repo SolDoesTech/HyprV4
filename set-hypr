@@ -133,7 +133,7 @@ sleep 1
 
 # attempt to discover if this is a VM or not
 echo -e "$CNT - Checking for Physical or VM..."
-ISVM=$(hostnamectl | grep Chassis)
+ISVM=$(hostnamectl | grep Chassisg
 echo -e "Using $ISVM"
 if [[ $ISVM == *"vm"* ]]; then
 	echo -e "$CWR - Please note that VMs are not fully supported and if you try to run this on
@@ -245,15 +245,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 
 	# Install the correct hyprland version
 	echo -e "$CNT - Installing Hyprland, this may take a while..."
-	if [[ "$ISNVIDIA" == true ]]; then
-		#check for hyprland and remove it so the -nvidia package can be installed
-		if yay -Q hyprland &>>/dev/null; then
-			yay -R --noconfirm hyprland &>>$INSTLOG &
-		fi
-		install_software hyprland-nvidia
-	else
-		install_software hyprland
-	fi
+  install_software hyprland
 
 	# Stage 1 - main components
 	echo -e "$CNT - Installing main components, this may take a while..."
