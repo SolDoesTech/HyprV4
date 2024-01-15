@@ -233,16 +233,8 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
     fi
 
     # Install the correct hyprland version
-    echo -e "$CNT - Installing Hyprland, this may take a while..."
-    if [[ "$ISNVIDIA" == true ]]; then
-        #check for hyprland and remove it so the -nvidia package can be installed
-        if yay -Q hyprland &>> /dev/null ; then
-            yay -R --noconfirm hyprland &>> $INSTLOG &
-        fi
-        install_software hyprland-nvidia
-    else
-        install_software hyprland
-    fi
+    echo -e "$CNT - Installing Hyprland, this may take a while..."   
+    install_software hyprland
 
     # Stage 1 - main components
     echo -e "$CNT - Installing main components, this may take a while..."
