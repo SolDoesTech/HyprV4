@@ -186,7 +186,7 @@ fi
 
 #### Check for package manager ####
 if [ ! -f /sbin/yay ]; then  
-    echo -en "$CNT - Configuering yay."
+    echo -en "$CNT - Configuring yay."
     git clone https://aur.archlinux.org/yay.git &>> $INSTLOG
     cd yay
     makepkg -si --noconfirm &>> ../$INSTLOG &
@@ -227,7 +227,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
         done
     
         # update config
-        sudo sed -i 's/MODULES=()/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
+        sudo sed -i 's/MODULES=""/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
         sudo mkinitcpio --config /etc/mkinitcpio.conf --generate /boot/initramfs-custom.img
         echo -e "options nvidia-drm modeset=1" | sudo tee -a /etc/modprobe.d/nvidia.conf &>> $INSTLOG
     fi
