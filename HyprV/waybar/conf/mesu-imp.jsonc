@@ -9,7 +9,11 @@
         "tooltip" : true,
         "format" : "{}",
         "interval" : 30,
-        "exec" : "~/.config/HyprV/waybar/scripts/waybar-wttr.py",
+        // add your postal code (zip code) to the end of this line to customize
+        // the weathers location. you can also use a 3 letter airport code instead of 
+        // a postal code.
+        // ex: "~/.config/HyprV/waybar/scripts/waybar-wttr.py 12345",
+        "exec" : "~/.config/HyprV/waybar/scripts/waybar-wttr.py ",
         "return-type" : "json"
     },
 
