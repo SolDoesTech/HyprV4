@@ -10,13 +10,30 @@ Do this ONLY if you need Nvidia support (do this first)
 ```
 yay -S linux-headers nvidia-dkms qt5-wayland qt5ct libva libva-nvidia-driver-git
 
-Add modules: nvidia nvidia_modeset nvidia_uvm nvidia_drm to /etc/mkinitcpio.conf
-
-Generate new image: sudo mkinitcpio --config /etc/mkinitcpio.conf --generate /boot/initramfs-custom.img
-
-Add/create the following: options nvidia-drm modeset=1 in /etc/modprobe.d/nvidia.conf
-
-reboot!
+```
+/etc/mkinitcpio.conf
+```
+MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
+```
+generate a new initramfs image
+```
+sudo mkinitcpio --config /etc/mkinitcpio.conf --generate /boot/initramfs-custom.img
+```
+Create NVIDIA Configuration
+```
+echo "options nvidia-drm modeset=1" | sudo tee /etc/modprobe.d/nvidia.conf
+```
+verify
+```
+cat /etc/modprobe.d/nvidia.conf
+```
+shoud return: 
+```
+options nvidia-drm modeset=1
+```
+now reboot
+```
+reboot
 ```
 
 Now install the below for Hyprland
