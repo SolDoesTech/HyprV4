@@ -9,7 +9,7 @@
     "modules-left": [
         "custom/power_btn",
         "custom/lock_screen",
-        "wlr/workspaces"
+        "hyprland/workspaces"
     ],
     "modules-center": [
         "idle_inhibitor",
@@ -65,7 +65,7 @@
         "tooltip": false
     },
 
-    "wlr/workspaces": {
+    "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
         "on-click": "activate",

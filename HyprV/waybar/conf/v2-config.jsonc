@@ -8,7 +8,7 @@
     "height": 50,
     "modules-left": [
         "custom/launch_wofi",
-        "wlr/workspaces",
+        "hyprland/workspaces",
         "cpu",
         "memory",
         "disk",
@@ -94,7 +94,7 @@
         "tooltip": true
     },
 
-    "wlr/workspaces": {
+    "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
         "on-click": "activate",
