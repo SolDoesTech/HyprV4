@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import json
 import requests
 from datetime import datetime
@@ -57,8 +58,21 @@ WEATHER_CODES = {
 
 data = {}
 
+def get_ip():
+    response = requests.get("https://api64.ipify.org?format=json").json()
+    return response["ip"]
 
-weather = requests.get("https://wttr.in/?format=j1").json()
+def get_zip():
+    ip_address = get_ip()
+    response = requests.get(f"https://ipapi.co/{ip_address}/json").json()
+    return response["postal"]
+
+if len(sys.argv) > 1:
+    postal = sys.argv[1]
+else:
+    postal = get_zip()
+
+weather = requests.get(f"https://wttr.in/{postal}?format=j1").json()
 
 
 def format_time(time):
