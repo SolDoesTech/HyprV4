@@ -2,13 +2,13 @@
 . ~/.config/HyprV/hyprv.conf
 
 #Check the version 
-VER=$(readlink -f ~/.config/waybar/config.jsonc | cut -d '-' -f1 | cut -d '/' -f8)
+VER=$(readlink -f ~/.config/waybar/config.jsonc | rev | cut -d '-' -f2 | cut -d '/' -f1 | rev)
 
 # Check which waybar theme is set
-THEMEIS=$(readlink -f ~/.config/waybar/style.css | cut -d '-' -f3)
+THEMEIS=$(readlink -f ~/.config/waybar/style.css | rev | cut -d '-' -f1 | rev)
 
 #if the theme is not dark then we need to switch to it
-if [[ $THEMEIS == "" ]]; then
+if [[ $THEMEIS != "dark.css" ]]; then
     SWITCHTO="-dark"
     MODESTR="Dark"
 else
