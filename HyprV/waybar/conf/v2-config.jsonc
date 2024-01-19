@@ -88,7 +88,7 @@
     "disable-scroll": true,
     "all-outputs": true,
     "on-click": "activate",
-    "persistent_workspaces": {
+    "persistent-workspaces": {
       "1": [],
       "2": [],
       "3": [],
