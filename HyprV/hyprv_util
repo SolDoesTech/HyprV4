@@ -2,144 +2,134 @@
 . ~/.config/HyprV/hyprv.conf
 
 get_theme() {
-    # Check which waybar theme is set
-    THEMEIS=$(readlink -f ~/.config/waybar/style.css | cut -d '-' -f3)
+	# Check which waybar theme is set
+	THEMEIS=$(readlink -f ~/.config/waybar/style.css | rev | cut -d '-' -f1 | rev)
 
-    #if the theme is not dark then we need to switch to it
-    if [[ $THEMEIS == "dark.css" ]]; then
-        SWITCHTO="-dark"
-        MODESTR="Dark"
-    else
-        SWITCHTO=""
-        MODESTR="Light"
-    fi
+	#if the theme is not dark then we need to switch to it
+	if [[ $THEMEIS != "dark.css" ]]; then
+		SWITCHTO="-dark"
+		MODESTR="Dark"
+	else
+		SWITCHTO=""
+		MODESTR="Light"
+	fi
 }
 
 update_theme() {
-    #set the xfce and GTK theme
-    if [[ $VER == "v4" || $VERTO == "v4-" ]]; then
-        xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Dark"
-        gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
-    else 
-        xfconf-query -c xsettings -p /Net/IconThemeName -s "Adwaita$SWITCHTO"
-        gsettings set org.gnome.desktop.interface icon-theme "Adwaita$SWITCHTO"
-    fi
+	#set the xfce and GTK theme
+	if [[ $VER == "v4" || $VERTO == "v4-" ]]; then
+		xfconf-query -c xsettings -p /Net/IconThemeName -s "Papirus-Dark"
+		gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
+	else
+		xfconf-query -c xsettings -p /Net/IconThemeName -s "Adwaita$SWITCHTO"
+		gsettings set org.gnome.desktop.interface icon-theme "Adwaita$SWITCHTO"
+	fi
 
-    xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita$SWITCHTO"
-    gsettings set org.gnome.desktop.interface gtk-theme "Adwaita$SWITCHTO"
+	xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita$SWITCHTO"
+	gsettings set org.gnome.desktop.interface gtk-theme "Adwaita$SWITCHTO"
 }
 
 get_ver() {
-    VER=$(readlink -f ~/.config/waybar/config.jsonc | cut -d '-' -f1 | cut -d '/' -f8)
+	VER=$(readlink -f ~/.config/waybar/config.jsonc | rev | cut -d '-' -f2 | cut -d '/' -f1 | rev)
 }
 
 restart_waybar() {
-    #restart the waybar
-    pkill waybar
-    waybar & 
+	#restart the waybar
+	pkill waybar
+	waybar &
 
-    get_ver   
+	get_ver
 
-    if [[ $VER == "v4" ]]; then
-        waybar --config ~/.config/HyprV/waybar/conf/v4-config-bottom.jsonc
-    fi
+	if [[ $VER == "v4" ]]; then
+		waybar --config ~/.config/HyprV/waybar/conf/v4-config-bottom.jsonc
+	fi
 
 }
 
 set_current_background() {
-    get_theme
-    get_ver
-    
-    if [[ ! -z "$SET_BG" ]]; then
-        #set the current background
-        if [[ $THEMEIS == "dark.css" ]]; then
-            swww img ~/.config/HyprV/backgrounds/$VER'-background-dark.jpg'
-        else
-            swww img ~/.config/HyprV/backgrounds/$VER'-background.jpg'
-        fi
-    else
-        swww img $SET_BG
-    fi
+	get_theme
+	get_ver
+
+	if [[ ! -z "$SET_BG" ]]; then
+		#set the current background
+		if [[ $THEMEIS == "dark.css" ]]; then
+			swww img ~/.config/HyprV/backgrounds/$VER'-background-dark.jpg'
+		else
+			swww img ~/.config/HyprV/backgrounds/$VER'-background.jpg'
+		fi
+	else
+		swww img $SET_BG
+	fi
 }
 
 switch_version() {
-    get_theme
-    get_ver
-    case $VER in
-        v1)
-            #we are on v1 so switch to v2
-            VERTO="v2-"
-            notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to HyprV2"
-        ;;
-        
-        v2)
-            #we are on v2 so switch to v3
-            VERTO="v3-"
-            notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to HyprV3"
-        ;;
+	get_theme
+	get_ver
+	case $VER in
+	v1)
+		#we are on v1 so switch to v2
+		VERTO="v2-"
+		notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to HyprV2"
+		;;
 
-        v3)
-            #we are on v3 so switch to v4
-            VERTO="v4-"
-            notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to HyprV4"
-        ;;
+	v2)
+		#we are on v2 so switch to v3
+		VERTO="v3-"
+		notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to HyprV3"
+		;;
 
-        v4)
-            #we are on v4 so switch to v1
-            VERTO="v1-"
-            notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to HyprV1"
-        ;;
-        
-    esac
-    #set the waybar config
-    ln -sf ~/.config/HyprV/waybar/conf/$VERTO'config.jsonc' ~/.config/waybar/config.jsonc
-    #set the waybar theme
-    ln -sf ~/.config/HyprV/waybar/style/$VERTO'style'$SWITCHTO.css ~/.config/waybar/style.css
-    #set the wofi theme
-    ln -sf ~/.config/HyprV/wofi/style/$VERTO'style'$SWITCHTO.css ~/.config/wofi/style.css
+	v3)
+		#we are on v3 so switch to v4
+		VERTO="v4-"
+		notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to HyprV4"
+		;;
 
-    #set the background
-    if [ -z $SET_BG ]; then
-        swww img ~/.config/HyprV/backgrounds/$VERTO'background'$SWITCHTO.jpg --transition-fps 60 --transition-type wipe --transition-duration 2
-    else
-        swww img $SET_BG --transition-fps 60 --transition-type wipe --transition-duration 2
-    fi
+	v4)
+		#we are on v4 so switch to v1
+		VERTO="v1-"
+		notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to HyprV1"
+		;;
 
-    #update the sddm image
-    cp -f ~/.config/HyprV/backgrounds/$VERTO'background'$SWITCHTO.jpg /usr/share/sddm/themes/sdt/wallpaper.jpg
+	esac
+	#set the waybar config
+	ln -sf ~/.config/HyprV/waybar/conf/$VERTO'config.jsonc' ~/.config/waybar/config.jsonc
+	#set the waybar theme
+	ln -sf ~/.config/HyprV/waybar/style/$VERTO'style'$SWITCHTO.css ~/.config/waybar/style.css
+	#set the wofi theme
+	ln -sf ~/.config/HyprV/wofi/style/$VERTO'style'$SWITCHTO.css ~/.config/wofi/style.css
+
+	#set the background
+	if [ -z $SET_BG ]; then
+		swww img ~/.config/HyprV/backgrounds/$VERTO'background'$SWITCHTO.jpg --transition-fps 60 --transition-type wipe --transition-duration 2
+	else
+		swww img $SET_BG --transition-fps 60 --transition-type wipe --transition-duration 2
+	fi
+
+	#update the sddm image
+	cp -f ~/.config/HyprV/backgrounds/$VERTO'background'$SWITCHTO.jpg /usr/share/sddm/themes/sdt/wallpaper.jpg
 
 }
 
 switch_keyboard() {
-    hyprctl switchxkblayout $SET_KB next
+	hyprctl switchxkblayout $SET_KB next
 }
 
 if [[ "$1" == "vswitch" ]]; then
-    switch_version
-    update_theme
-    restart_waybar
+	switch_version
+	update_theme
+	restart_waybar
 elif [[ "$1" == "setbg" ]]; then
-    set_current_background
-    update_theme
-    restart_waybar
+	set_current_background
+	update_theme
+	restart_waybar
 elif [[ "$1" == "swkb" ]]; then
-    switch_keyboard
-    restart_waybar
+	switch_keyboard
+	restart_waybar
 fi
 
 # need to show the version and tooltip
 get_ver
 
-TOOLTIP='Default Keybinds\n'\
-'SUPER + Q = Start Kitty\n'\
-'SUPER + F4 = Close Window\n'\
-'SUPER + L = Lock Screen\n'\
-'SUPER + M = Logout menu\n'\
-'SUPER + E = File Manager\n'\
-'SUPER + V = Toggle Float\n'\
-'SUPER + SPACE = App Launcher\n'\
-'SUPER + S = Screenshot\n'\
-'SUPER + T = Switch HyprV version\n'\
-'ALT + V = Open clipboard manager'
+TOOLTIP='Default Keybinds\n''SUPER + Q = Start Kitty\n''SUPER + F4 = Close Window\n''SUPER + L = Lock Screen\n''SUPER + M = Logout menu\n''SUPER + E = File Manager\n''SUPER + V = Toggle Float\n''SUPER + SPACE = App Launcher\n''SUPER + S = Screenshot\n''SUPER + T = Switch HyprV version\n''ALT + V = Open clipboard manager'
 
 echo '{"text": "'$VER'", "tooltip": "'$TOOLTIP'"}'
