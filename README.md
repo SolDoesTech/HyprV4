@@ -25,15 +25,18 @@ NOTES: You need to install Paru! I don't know if this project will have an optio
 
 #### NVIDIA: Do this if you have a nvidia card.
 Run this command:
+
 ``
 paru -Sy linux-headers nvidia-dkms qt5-wayland qt5ct libva libva-nvidia-driver-git
 ``
 
 Write this in /etc/mkinitcpio.conf:
+
 ``
 MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 ``
 Run these command:
+
 ``
 sudo mkinitcpio --config /etc/mkinitcpio.conf --generate /boot/initramfs-custom.img
 ``
@@ -43,11 +46,13 @@ echo "options nvidia-drm modeset=1" | sudo tee /etc/modprobe.d/nvidia.conf
 ``
 
 OPTIONAL: Verify command.
+
 ``
 cat /etc/modprobe.d/nvidia.conf
 ``
 
 It should return:
+
 ``
 options nvidia-drm modeset=1
 ``
