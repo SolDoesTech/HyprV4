@@ -133,7 +133,7 @@ sleep 1
 
 # attempt to discover if this is a VM or not
 echo -e "$CNT - Checking for Physical or VM..."
-ISVM=$(hostnamectl | grep Chassisg
+ISVM=$(hostnamectl | grep Chassis)
 echo -e "Using $ISVM"
 if [[ $ISVM == *"vm"* ]]; then
 	echo -e "$CWR - Please note that VMs are not fully supported and if you try to run this on
@@ -245,7 +245,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 
 	# Install the correct hyprland version
 	echo -e "$CNT - Installing Hyprland, this may take a while..."
-  install_software hyprland
+	install_software hyprland
 
 	# Stage 1 - main components
 	echo -e "$CNT - Installing main components, this may take a while..."
