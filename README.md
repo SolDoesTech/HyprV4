@@ -35,6 +35,7 @@ Write this in /etc/mkinitcpio.conf:
 ``
 MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 ``
+
 Run these command:
 
 ``
